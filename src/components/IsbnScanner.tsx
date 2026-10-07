@@ -1,7 +1,8 @@
 "use client";
 
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
-import { cleanIsbn, formatIsbn, isValidIsbn, isValidIsbn13 } from "@/lib/isbn";
+import BookConfirmation from "@/components/BookConfirmation";
+import { cleanIsbn, isValidIsbn, isValidIsbn13 } from "@/lib/isbn";
 
 type ScanStatus = "idle" | "starting" | "scanning" | "success" | "error";
 
@@ -49,7 +50,7 @@ export default function IsbnScanner() {
       stopScanner();
       setIsbn(normalized);
       setStatus("success");
-      setMessage("ISBN captured. Book lookup is the next phase.");
+      setMessage("ISBN captured.");
       return true;
     },
     [stopScanner],
@@ -153,6 +154,10 @@ export default function IsbnScanner() {
 
   const cameraActive = status === "starting" || status === "scanning";
 
+  if (status === "success" && isbn) {
+    return <BookConfirmation isbn={isbn} onScanAgain={reset} />;
+  }
+
   return (
     <main className="app-shell">
       <section className="brand-block" aria-labelledby="page-title">
@@ -200,13 +205,6 @@ export default function IsbnScanner() {
             </div>
           )}
 
-          {status === "success" && (
-            <div className="success-panel">
-              <span className="success-label">ISBN FOUND</span>
-              <strong>{formatIsbn(isbn)}</strong>
-              <small>{isbn}</small>
-            </div>
-          )}
 
           {cameraActive && <div className="scan-guide" aria-hidden="true" />}
         </div>
@@ -215,28 +213,21 @@ export default function IsbnScanner() {
           {message}
         </p>
 
-        {status !== "success" ? (
-          <button
-            className="button button-primary"
-            type="button"
-            onClick={cameraActive ? handleStop : startScanner}
-            disabled={status === "starting"}
-          >
-            {status === "starting"
-              ? "STARTING CAMERA…"
-              : cameraActive
-                ? "STOP CAMERA"
-                : "SCAN BOOK"}
-          </button>
-        ) : (
-          <button className="button button-primary" type="button" onClick={reset}>
-            SCAN ANOTHER
-          </button>
-        )}
+        <button
+          className="button button-primary"
+          type="button"
+          onClick={cameraActive ? handleStop : startScanner}
+          disabled={status === "starting"}
+        >
+          {status === "starting"
+            ? "STARTING CAMERA…"
+            : cameraActive
+              ? "STOP CAMERA"
+              : "SCAN BOOK"}
+        </button>
       </section>
 
-      {status !== "success" && (
-        <section className="manual-card">
+      <section className="manual-card">
           <div className="divider-label">
             <span>OR ENTER IT MANUALLY</span>
           </div>
@@ -263,7 +254,6 @@ export default function IsbnScanner() {
             </div>
           </form>
         </section>
-      )}
 
       <p className="privacy-note">
         Camera video stays on your device during scanning.
