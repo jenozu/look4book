@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ResaleCheck from "@/components/ResaleCheck";
 import type { BookMetadata } from "@/lib/book-types";
 import { formatIsbn } from "@/lib/isbn";
 
@@ -172,14 +173,7 @@ export default function BookConfirmation({
           </button>
         </section>
       ) : (
-        <section className="confirmed-card" aria-live="polite">
-          <span className="success-label">BOOK CONFIRMED</span>
-          <h2>Ready for resale pricing.</h2>
-          <p>Marketplace pricing is the next phase.</p>
-          <button className="button button-secondary full-width" type="button" onClick={onScanAgain}>
-            SCAN ANOTHER
-          </button>
-        </section>
+        <ResaleCheck isbn={book.isbn} onScanAnother={onScanAgain} />
       )}
 
       <p className="data-note">Book metadata provided by Open Library.</p>
