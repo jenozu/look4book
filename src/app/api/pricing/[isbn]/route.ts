@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { searchEbayByIsbn, EbayConfigurationError } from "@/lib/ebay";
-import { cleanIsbn, isValidIsbn13 } from "@/lib/isbn";
+import { cleanIsbn, toIsbn13 } from "@/lib/isbn";
 
 export async function GET(
   _request: Request,
@@ -8,16 +8,14 @@ export async function GET(
 ) {
   const { isbn: rawIsbn } = await params;
   const isbn = cleanIsbn(rawIsbn);
+  const isbn13 = toIsbn13(isbn);
 
-  if (!isValidIsbn13(isbn)) {
-    return NextResponse.json(
-      { error: "Pricing currently requires a valid ISBN-13." },
-      { status: 400 },
-    );
+  if (!isbn13) {
+    return NextResponse.json({ error: "Invalid ISBN." }, { status: 400 });
   }
 
   try {
-    const result = await searchEbayByIsbn(isbn);
+    const result = await searchEbayByIsbn(isbn13);
 
     if (!result) {
       return NextResponse.json(
