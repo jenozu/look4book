@@ -59,15 +59,15 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 
 ## Phase 3 — Resale Pricing
 
-- [ ] Define a normalized `MarketplaceResult` model.
-- [ ] Build the first marketplace adapter, with eBay as the preferred first source.
-- [ ] Search marketplace data using the exact ISBN whenever possible.
-- [ ] Extract usable comparable prices.
-- [ ] Exclude obvious pricing outliers.
-- [ ] Calculate low, median, and high resale estimates.
-- [ ] Return listing/comparable count when available.
-- [ ] Reduce confidence when market data is sparse.
-- [ ] Keep marketplace adapters independent so another source can be added later.
+- [x] Define a normalized `MarketplaceResult` model.
+- [x] Build the first marketplace adapter using eBay Browse API.
+- [x] Search marketplace data using exact ISBN/GTIN.
+- [x] Extract usable comparable active-listing prices.
+- [x] Exclude obvious pricing outliers using IQR filtering.
+- [x] Calculate low, median, and high resale estimates.
+- [x] Return listing/comparable count when available.
+- [x] Reduce confidence when market data is sparse; active listings are capped at MEDIUM confidence.
+- [x] Keep marketplace adapters independent so another source can be added later.
 - [ ] Add a second pricing source only if it can be integrated without bloating the MVP.
 
 **Phase exit:** An ISBN can produce a defensible resale-value range from at least one useful marketplace source.
@@ -76,17 +76,17 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 
 ## Phase 4 — Profit & Buy/Pass Engine
 
-- [ ] Add thrift-store purchase-price input in CAD.
-- [ ] Add configurable default shipping cost.
-- [ ] Add configurable marketplace fee percentages.
-- [ ] Calculate estimated net profit.
-- [ ] Calculate ROI.
-- [ ] Add configurable minimum-profit threshold.
-- [ ] Add configurable minimum-ROI threshold.
-- [ ] Implement BUY / MAYBE / PASS rules.
-- [ ] Implement HIGH / MEDIUM / LOW confidence.
+- [x] Add thrift-store purchase-price input in CAD.
+- [x] Add centrally configurable default shipping cost ($12 CAD initially).
+- [x] Add centrally configurable eBay book fee assumptions.
+- [x] Calculate estimated net profit.
+- [x] Calculate ROI.
+- [x] Add centrally configurable minimum-profit threshold.
+- [x] Add centrally configurable minimum-ROI threshold.
+- [x] Implement BUY / MAYBE / PASS rules.
+- [x] Implement HIGH / MEDIUM / LOW confidence model; active-listing-only data cannot produce HIGH yet.
 - [ ] Show which marketplace currently looks best.
-- [ ] Make calculations deterministic and unit-test them.
+- [x] Make calculations deterministic and unit-test ISBN, pricing/outliers, fees, profit, ROI, and recommendation.
 
 ### Initial recommendation defaults
 
@@ -106,12 +106,12 @@ These are starting values and must remain configurable.
 - [x] Use bubblegum pink as the app canvas.
 - [x] Use cyan for primary actions.
 - [x] Use white surfaces with strong black borders and offset shadows.
-- [ ] Build the four core views: Scanner, Book Confirmation, Purchase Price, Result.
-- [ ] Keep primary mobile touch targets at least ~44px.
-- [ ] Make **Scan Another** a prominent result-screen action.
-- [x] Add loading state for metadata lookup; pricing loading state remains Phase 3.
-- [x] Add readable scanner and metadata error states without breaking the flow.
-- [ ] Add PWA manifest and installability.
+- [x] Build the four core views: Scanner, Book Confirmation, Purchase Price, Result.
+- [x] Keep primary mobile touch targets at least ~44px.
+- [x] Make **Scan Another** a prominent result-screen action.
+- [x] Add loading states for metadata and marketplace pricing.
+- [x] Add readable scanner, metadata, and marketplace error/setup states without breaking the flow.
+- [x] Add PWA manifest, app icon, and home-screen metadata.
 - [ ] Test the full flow at phone width.
 
 **Phase exit:** The app is fast and comfortable to use while standing in a thrift store.
@@ -120,18 +120,18 @@ These are starting values and must remain configurable.
 
 ## Phase 6 — MVP QA & Deployment
 
-- [ ] Add environment-variable documentation.
-- [ ] Ensure secrets are never committed.
-- [ ] Add unit tests for ISBN normalization.
-- [ ] Add unit tests for pricing/outlier logic.
-- [ ] Add unit tests for fee, profit, ROI, and recommendation logic.
-- [ ] Test missing marketplace data.
+- [x] Add environment-variable documentation in `.env.example`.
+- [x] Ensure secrets are excluded by `.gitignore`; only placeholder env names are committed.
+- [x] Add unit tests for ISBN normalization/validation/conversion.
+- [x] Add unit tests for pricing/outlier logic.
+- [x] Add unit tests for fee, profit, ROI, and recommendation logic.
+- [x] Handle and test-safe missing/unconfigured marketplace states in the API/UI.
 - [ ] Test camera denial and manual-entry fallback.
 - [ ] Test slow or failed third-party requests.
 - [x] Run production build and typecheck on Vercel.
 - [x] Deploy to Vercel and link GitHub main branch.
 - [ ] Test the deployed app on a real phone using real thrift-store books.
-- [ ] Update `70-Project-State/current-state.md` with the verified MVP state.
+- [x] Update `70-Project-State/current-state.md` with the current verified implementation state.
 
 **Phase exit:** The deployed app can be used for real-world sourcing.
 
