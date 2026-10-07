@@ -68,7 +68,11 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 - [x] Return listing/comparable count when available.
 - [x] Reduce confidence when market data is sparse; active listings are capped at MEDIUM confidence.
 - [x] Keep marketplace adapters independent so another source can be added later.
-- [x] Add Amazon SP-API as the second pricing/analytics source without making it mandatory for eBay fallback.\n- [x] Add Amazon ISBN → ASIN catalog lookup and sales-rank analytics.\n- [x] Add Amazon used-offer pricing and offer-count analytics.\n- [x] Add Amazon Product Fees estimate support for merchant-fulfilled books.\n- [ ] Verify live Amazon SP-API calls after private-app credentials are approved and added to Vercel.
+- [x] Add Amazon SP-API as the second pricing/analytics source without making it mandatory for eBay fallback.
+- [x] Add Amazon ISBN → ASIN catalog lookup and sales-rank analytics.
+- [x] Add Amazon used-offer pricing and offer-count analytics.
+- [x] Add Amazon Product Fees estimate support for merchant-fulfilled books.
+- [ ] Verify live Amazon SP-API calls after private-app credentials are approved and added to Vercel.
 
 **Phase exit:** An ISBN can produce a defensible resale-value range from at least one useful marketplace source.
 
@@ -137,17 +141,131 @@ These are starting values and must remain configurable.
 
 ---
 
+## Phase 7 — Sourcing Intelligence & Learning
+
+**Goal:** Turn Look4Book from a one-book calculator into a sourcing system that learns which book categories, stores, price bands, and demand signals produce the fastest and most profitable inventory for this user.
+
+### Scan & sourcing history
+
+- [ ] Add a persistent database for scan history.
+- [ ] Save every scan, not only purchases.
+- [ ] Record scan timestamp and ISBN/ASIN.
+- [ ] Record book title, author, publisher, and subject/category when available.
+- [ ] Record Amazon sales rank and the rank category at time of scan.
+- [ ] Record Amazon used-offer count and current used-price range.
+- [ ] Record eBay listing/comparable count and current price range.
+- [ ] Record thrift-store purchase price.
+- [ ] Record sourcing location/store.
+- [ ] Record the initial Look4Book BUY / MAYBE / PASS recommendation.
+- [ ] Allow the user to mark each scan as **Bought** or **Passed**.
+- [ ] Preserve the original scan-time marketplace data so later results can be compared against what Look4Book predicted.
+
+### Inventory & actual-sale outcomes
+
+- [ ] Add a lightweight purchased-book inventory.
+- [ ] Record listing date.
+- [ ] Record marketplace listed on.
+- [ ] Record listing price.
+- [ ] Record sold date.
+- [ ] Record actual sale price.
+- [ ] Record actual marketplace fees.
+- [ ] Record actual shipping/packaging cost.
+- [ ] Calculate actual net profit.
+- [ ] Calculate actual ROI.
+- [ ] Calculate **days to sell**.
+- [ ] Compare estimated profit vs actual profit.
+- [ ] Compare estimated resale price vs actual sale price.
+
+### Category intelligence
+
+- [ ] Group results by book subject/category.
+- [ ] Calculate number scanned, number bought, and number sold by category.
+- [ ] Calculate median days to sell by category.
+- [ ] Calculate 30-day / 60-day / 90-day sell-through rate by category.
+- [ ] Calculate average and median net profit by category.
+- [ ] Calculate average purchase cost and average sale price by category.
+- [ ] Calculate average Amazon BSR for books that sold vs books that remained unsold.
+- [ ] Identify categories that combine strong demand, low competition, and high margin.
+- [ ] Surface categories that consume sourcing time but rarely produce worthwhile buys.
+
+### Store / sourcing-location intelligence
+
+- [ ] Calculate scans per store.
+- [ ] Calculate BUY-rate and purchase-rate per store.
+- [ ] Calculate expected profit sourced per store.
+- [ ] Calculate realized profit sourced per store.
+- [ ] Calculate average profit per purchased book by store.
+- [ ] Calculate median days to sell by sourcing location.
+- [ ] Calculate profit per sourcing trip.
+- [ ] Rank sourcing locations by historical return on time and money.
+- [ ] Show which categories are strongest at each store.
+
+### Demand, competition & turnover
+
+- [ ] Treat Amazon BSR as a relative demand signal, never as exact monthly sales.
+- [ ] Always retain the Amazon rank category alongside BSR.
+- [ ] Combine BSR with used-offer count so high demand / low competition can be distinguished from crowded listings.
+- [ ] Track historical BSR at scan time for purchased books.
+- [ ] Explore BSR bands by category once enough actual sales data exists.
+- [ ] Learn which BSR ranges correspond to fast, medium, and slow turnover in this user's own inventory.
+- [ ] Add a simple demand label such as **Fast / Moderate / Slow** only after enough historical evidence exists.
+
+### Seasonality
+
+- [ ] Analyze sales and sourcing results by month.
+- [ ] Identify seasonal categories such as textbooks and academic material.
+- [ ] Compare days-to-sell by category and month.
+- [ ] Surface seasonal sourcing prompts when evidence supports them.
+- [ ] Avoid claiming a seasonal pattern until enough historical observations exist.
+
+### Look4Book Opportunity Score
+
+- [ ] Design an explainable 0–100 Opportunity Score.
+- [ ] Include **Demand** as one component.
+- [ ] Include **Competition** as one component.
+- [ ] Include **Expected Profit / ROI** as one component.
+- [ ] Include **Historical Turnover** from the user's own data as one component.
+- [ ] Include **Category performance** as one component once enough data exists.
+- [ ] Include **Store/source performance** as an optional component once enough data exists.
+- [ ] Make every score component visible so the score is not a black box.
+- [ ] Fall back gracefully when historical data is sparse.
+- [ ] Do not let a strong Amazon BSR override obviously poor economics.
+
+### Analytics dashboard
+
+- [ ] Add an overview dashboard.
+- [ ] Show realized monthly profit.
+- [ ] Show current inventory count and inventory cost.
+- [ ] Show books sold this month.
+- [ ] Show median days to sell.
+- [ ] Show 30-day sell-through rate.
+- [ ] Show average actual profit per sold book.
+- [ ] Show estimated-vs-actual profit accuracy.
+- [ ] Show top categories by profit.
+- [ ] Show fastest categories by turnover.
+- [ ] Show top sourcing locations by realized profit.
+- [ ] Show slow/dead inventory requiring repricing or liquidation.
+- [ ] Add filters for date range, category, store, and marketplace.
+
+### Data-quality guardrails
+
+- [ ] Separate Amazon demand signals from actual observed user sales.
+- [ ] Keep scan-time estimates immutable for later backtesting.
+- [ ] Require enough samples before drawing category/store conclusions.
+- [ ] Show sample size beside every learned metric.
+- [ ] Avoid exact monthly-sales estimates unless a source genuinely provides them.
+- [ ] Prefer median values for turnover/profit summaries where outliers could mislead.
+
+**Phase exit:** Look4Book can answer not only “Should I buy this book?” but also “What kinds of books should I spend my sourcing time on, where should I source them, and how quickly do they actually sell for me?”
+
+
+---
+
 ## Post-MVP Backlog — Not Part of Current Scope
 
 Do not start these until the core MVP has been used in the real world.
 
-- Scan history
-- Purchase tracking
 - Condition selector
-- Actual-sale tracking
-- Estimated-vs-actual profit
-- Inventory management
-- Sell-through / demand scoring
 - Automatic shipping-rate lookup
 - Cover-photo identification when no ISBN exists
 - AI-assisted edition matching

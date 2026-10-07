@@ -82,6 +82,18 @@ Defaults:
 - Shipping remains a flat configurable CAD assumption for the MVP.
 - Amazon fee estimate currently assumes merchant fulfillment.
 
+## Planned sourcing-intelligence expansion
+
+A formal **Phase 7 — Sourcing Intelligence & Learning** has been added to `master_plan.md`.
+
+The design is documented in:
+
+`10-Strategy/SOURCING_INTELLIGENCE.md`
+
+The planned system will eventually capture scan history, Amazon BSR + rank category, offer counts, sourcing location, buy/pass decisions, actual sales, days-to-sell, sell-through, category performance, store performance, seasonality, estimated-vs-actual accuracy, and an explainable Look4Book Opportunity Score.
+
+This work remains post-MVP. It should begin only after live Amazon/eBay data and the basic physical-phone sourcing flow are verified.
+
 ## Next action
 
 Complete `40-Research/amazon-sp-api-setup.md`, add Amazon credentials to Vercel, then run one real-book test.
@@ -93,4 +105,5 @@ Complete `40-Research/amazon-sp-api-setup.md`, add Amazon credentials to Vercel,
 3. This file
 4. `10-Strategy/PRD.md`
 5. `40-Research/amazon-sp-api-setup.md`
-6. Relevant architecture/decision notes
+6. `10-Strategy/SOURCING_INTELLIGENCE.md`
+7. Relevant architecture/decision notes
