@@ -1,63 +1,102 @@
 # Look4Book — Current Project State
 
 **Last updated:** 2026-10-07  
-**Status:** Scanner + book-identification flow implemented and building successfully on Vercel.
+**Status:** Core MVP implementation is complete through resale recommendation. Live eBay pricing credentials and physical iPhone/book verification remain.
 
-## Completed
+## Implemented
 
-- Repository and 2nd Brain foundation are in place.
-- Next.js 16.4 + React 19.3 + TypeScript + Tailwind scaffold is committed.
-- Mobile-first eBayBay-derived pink/cyan/white/black UI is implemented.
-- EAN-13 / ISBN-13 camera scanning is implemented with ZXing.
-- Scanner prefers the rear-facing phone camera.
-- ISBN-10 and ISBN-13 manual entry fallback is implemented.
-- ISBN check-digit validation and normalization are implemented.
-- Camera-denied, invalid-ISBN, stop/retry, and scan-again states are implemented.
-- `getBookByISBN(isbn)` is implemented behind a provider boundary.
-- Open Library is connected as the first no-key metadata provider.
-- Book lookup returns title, authors, ISBN, publisher, publication date, page count, and cover when available.
-- Book confirmation UI includes **Correct Book** and **Scan Again**.
-- Unknown/missing metadata returns a readable recovery state.
-- Vercel project `look4book` is linked to `jenozu/look4book`.
-- Production builds compile successfully and pass Next.js TypeScript validation.
+### Scanner
+- Next.js 16.4 + React 19.3 + TypeScript + Tailwind.
+- Mobile-first eBayBay-derived pink/cyan/white/black visual system.
+- ZXing browser camera scanning for EAN-13 / ISBN-13.
+- Rear-camera preference.
+- ISBN-10 / ISBN-13 manual fallback.
+- ISBN validation, normalization, and ISBN-10 → ISBN-13 conversion.
+- Camera denied, invalid ISBN, stop/retry, and scan-again recovery states.
 
-## Current deployment
+### Book identification
+- `getBookByISBN(isbn)` provider boundary.
+- Open Library metadata adapter with no API key required.
+- Title, author, ISBN, publisher, publication date, page count, and cover when available.
+- Book confirmation screen with **Correct Book** / **Scan Again**.
+- Missing-book and provider-error states.
+
+### Resale pricing
+- Normalized `MarketplaceResult` model.
+- eBay Browse API adapter using application OAuth client credentials.
+- Exact ISBN/GTIN lookup for used listings.
+- Canadian marketplace defaults to `EBAY_CA`.
+- Only CAD comparables are used for the Canadian profit calculation.
+- IQR outlier filtering.
+- Low / median / high active-listing estimate.
+- Comparable count.
+- Sparse-data confidence reduction.
+- Active asking-price estimates are deliberately capped at MEDIUM confidence because they are not completed-sales history.
+- Graceful setup state when eBay credentials are not configured.
+
+### Profit / decision engine
+- Purchase price input in CAD.
+- Initial shipping assumption: $12 CAD.
+- Approximate eBay book fee model: 15.3% plus per-order fee.
+- Net-profit calculation.
+- ROI calculation.
+- BUY / MAYBE / PASS recommendation.
+- Initial BUY threshold: profit ≥ $15 CAD, ROI ≥ 75%, and confidence above LOW.
+- Central constants make thresholds/assumptions easy to change later.
+
+### QA
+- Vitest is installed.
+- Production builds run unit tests before Next.js build.
+- Unit tests cover:
+  - ISBN validation/normalization/conversion.
+  - Outlier filtering and active-listing summarization.
+  - Fee calculation.
+  - Profit and ROI.
+  - BUY/MAYBE/PASS confidence behavior.
+- Test-gated Vercel deployment reached READY successfully.
+- TypeScript and Next.js production compilation pass.
+
+### PWA
+- Web app manifest added.
+- Look4Book app icon added.
+- Standalone/home-screen metadata added.
+- Pink theme/background configured.
+
+## Deployment
 
 Vercel project: `look4book`  
 Git source: `jenozu/look4book` → `main`  
-Primary Vercel alias: `look4book-jenozus-projects.vercel.app`
+Primary alias: `https://look4book-jenozus-projects.vercel.app`
 
-When the Git project was linked, Vercel treated `main` as the production branch, so the initial deployment went to the project's production target rather than remaining preview-only.
+Vercel treats `main` as this project's production branch, so pushes to `main` deploy automatically.
 
-## Still needs physical-device verification
+## What I still need from the user
 
-These cannot be truthfully marked complete without using a real phone/book:
+### 1. eBay production credentials
+The pricing adapter is built, but live eBay data cannot run until these are configured securely in Vercel:
 
-1. Camera permission flow on the user's iPhone.
-2. Successful scan of a physical ISBN-13 barcode.
-3. Book identification across several common/uncommon physical books.
+- `EBAY_CLIENT_ID`
+- `EBAY_CLIENT_SECRET`
+- `EBAY_MARKETPLACE_ID=EBAY_CA` (optional; this is already the code default)
 
-## Next development phase
+Do **not** commit or paste secrets into GitHub/chat. Add them directly in Vercel project environment settings.
 
-**Phase 3 — Resale Pricing**
+### 2. Physical iPhone/book verification
+Still unverified:
+- Camera permission flow on the user's iPhone.
+- Successful physical ISBN barcode scan.
+- Metadata accuracy across several real books.
+- Full scan → confirm → price → recommendation flow on-device after eBay credentials are connected.
 
-The recommended first marketplace is eBay. The app can be structured now, but live eBay marketplace lookup will require eBay application credentials configured as Vercel environment variables. Credentials must not be committed to Git.
+## Known MVP limitation
 
-Planned next work:
+The standard eBay Browse integration currently uses **active asking prices**, not completed/sold prices. The UI communicates this and caps confidence at MEDIUM. A future data source for sold-history / sell-through would materially improve valuation quality.
 
-1. Define `MarketplaceResult`.
-2. Build the eBay marketplace adapter.
-3. Add outlier-resistant resale range calculation.
-4. Add comparable count + confidence.
-5. Connect the confirmed-book screen to resale pricing.
+## Next recommended action
 
-## Blocker for live marketplace data
+Configure the eBay credentials in Vercel, redeploy, then test one real book end-to-end on the user's iPhone.
 
-Live eBay API authentication requires project credentials (client ID / client secret or the appropriate eBay application-token flow). No secrets are currently stored in this repository.
-
-## Handoff rule
-
-Any future agent should read, in order:
+## Handoff order
 
 1. `.hermes.md`
 2. `master_plan.md`
