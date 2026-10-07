@@ -50,3 +50,26 @@ export function formatIsbn(value: string): string {
   }
   return isbn;
 }
+
+
+export function toIsbn13(value: string): string | null {
+  const isbn = cleanIsbn(value);
+
+  if (isbn.length === 13) {
+    return isValidIsbn13(isbn) ? isbn : null;
+  }
+
+  if (!isValidIsbn10(isbn)) return null;
+
+  const base = `978${isbn.slice(0, 9)}`;
+  const sum = base
+    .split("")
+    .reduce(
+      (total, char, index) =>
+        total + Number(char) * (index % 2 === 0 ? 1 : 3),
+      0,
+    );
+  const checkDigit = (10 - (sum % 10)) % 10;
+
+  return `${base}${checkDigit}`;
+}
