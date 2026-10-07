@@ -68,7 +68,7 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 - [x] Return listing/comparable count when available.
 - [x] Reduce confidence when market data is sparse; active listings are capped at MEDIUM confidence.
 - [x] Keep marketplace adapters independent so another source can be added later.
-- [ ] Add a second pricing source only if it can be integrated without bloating the MVP.
+- [x] Add Amazon SP-API as the second pricing/analytics source without making it mandatory for eBay fallback.\n- [x] Add Amazon ISBN → ASIN catalog lookup and sales-rank analytics.\n- [x] Add Amazon used-offer pricing and offer-count analytics.\n- [x] Add Amazon Product Fees estimate support for merchant-fulfilled books.\n- [ ] Verify live Amazon SP-API calls after private-app credentials are approved and added to Vercel.
 
 **Phase exit:** An ISBN can produce a defensible resale-value range from at least one useful marketplace source.
 
@@ -85,7 +85,7 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 - [x] Add centrally configurable minimum-ROI threshold.
 - [x] Implement BUY / MAYBE / PASS rules.
 - [x] Implement HIGH / MEDIUM / LOW confidence model; active-listing-only data cannot produce HIGH yet.
-- [ ] Show which marketplace currently looks best.
+- [x] Compare connected marketplaces and show the current best estimated-profit option.
 - [x] Make calculations deterministic and unit-test ISBN, pricing/outliers, fees, profit, ROI, and recommendation.
 
 ### Initial recommendation defaults

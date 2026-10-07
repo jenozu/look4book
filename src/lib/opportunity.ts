@@ -21,18 +21,19 @@ export function estimateEbayBookFee(salePrice: number): number {
   return roundMoney(salePrice * DEFAULT_BOOK_FEE_RATE + orderFee);
 }
 
-export function calculateOpportunity({
+export function calculateOpportunityWithFee({
   purchasePrice,
   resalePrice,
+  estimatedFee,
   confidence,
   shippingCost = DEFAULT_SHIPPING_COST_CAD,
 }: {
   purchasePrice: number;
   resalePrice: number;
+  estimatedFee: number;
   confidence: Confidence;
   shippingCost?: number;
 }): Opportunity {
-  const estimatedFee = estimateEbayBookFee(resalePrice);
   const estimatedProfit = roundMoney(
     resalePrice - estimatedFee - shippingCost - purchasePrice,
   );
@@ -54,9 +55,29 @@ export function calculateOpportunity({
   }
 
   return {
-    estimatedFee,
+    estimatedFee: roundMoney(estimatedFee),
     estimatedProfit,
     roi,
     recommendation,
   };
+}
+
+export function calculateOpportunity({
+  purchasePrice,
+  resalePrice,
+  confidence,
+  shippingCost = DEFAULT_SHIPPING_COST_CAD,
+}: {
+  purchasePrice: number;
+  resalePrice: number;
+  confidence: Confidence;
+  shippingCost?: number;
+}): Opportunity {
+  return calculateOpportunityWithFee({
+    purchasePrice,
+    resalePrice,
+    estimatedFee: estimateEbayBookFee(resalePrice),
+    confidence,
+    shippingCost,
+  });
 }

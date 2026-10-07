@@ -1,8 +1,8 @@
 export type Confidence = "high" | "medium" | "low";
 
 export type MarketplaceResult = {
-  marketplace: "ebay";
-  basis: "active_listings";
+  marketplace: "ebay" | "amazon";
+  basis: "active_listings" | "active_offers";
   currency: string;
   listingCount: number;
   sampleSize: number;
@@ -11,4 +11,9 @@ export type MarketplaceResult = {
   highPrice: number;
   confidence: Confidence;
   note: string;
+  asin?: string;
+  salesRank?: number;
+  salesRankTitle?: string;
+  estimatedFees?: number;
+  estimatedFeesCurrency?: string;
 };

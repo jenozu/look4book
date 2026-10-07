@@ -1,100 +1,90 @@
 # Look4Book — Current Project State
 
 **Last updated:** 2026-10-07  
-**Status:** Core MVP implementation is complete through resale recommendation. Live eBay pricing credentials and physical iPhone/book verification remain.
+**Status:** Amazon + eBay marketplace architecture is implemented. Live marketplace credentials and physical-device testing remain.
+
+## Core flow
+
+`Scan ISBN → identify book → confirm → enter thrift price → Amazon + eBay analytics → estimated profit/ROI → BUY / MAYBE / PASS`
 
 ## Implemented
 
-### Scanner
-- Next.js 16.4 + React 19.3 + TypeScript + Tailwind.
-- Mobile-first eBayBay-derived pink/cyan/white/black visual system.
-- ZXing browser camera scanning for EAN-13 / ISBN-13.
-- Rear-camera preference.
-- ISBN-10 / ISBN-13 manual fallback.
-- ISBN validation, normalization, and ISBN-10 → ISBN-13 conversion.
-- Camera denied, invalid ISBN, stop/retry, and scan-again recovery states.
+### Scanner and identification
+- Mobile-first ZXing ISBN scanner.
+- Manual ISBN fallback.
+- ISBN-10 / ISBN-13 validation and conversion.
+- Open Library remains the no-key metadata fallback.
 
-### Book identification
-- `getBookByISBN(isbn)` provider boundary.
-- Open Library metadata adapter with no API key required.
-- Title, author, ISBN, publisher, publication date, page count, and cover when available.
-- Book confirmation screen with **Correct Book** / **Scan Again**.
-- Missing-book and provider-error states.
+### eBay
+- eBay Browse API adapter.
+- Exact ISBN/GTIN matching.
+- CAD active-listing range.
+- Outlier filtering.
+- Approximate eBay fee model.
+- Graceful operation when eBay is not connected.
 
-### Resale pricing
-- Normalized `MarketplaceResult` model.
-- eBay Browse API adapter using application OAuth client credentials.
-- Exact ISBN/GTIN lookup for used listings.
-- Canadian marketplace defaults to `EBAY_CA`.
-- Only CAD comparables are used for the Canadian profit calculation.
-- IQR outlier filtering.
-- Low / median / high active-listing estimate.
-- Comparable count.
-- Sparse-data confidence reduction.
-- Active asking-price estimates are deliberately capped at MEDIUM confidence because they are not completed-sales history.
-- Graceful setup state when eBay credentials are not configured.
+### Amazon SP-API
+- Private-app LWA refresh-token authentication helper.
+- Current SP-API connection style: LWA access token + SP-API headers, no legacy AWS SigV4 implementation.
+- Amazon.ca Marketplace ID default: `A2EUQ1WTGCTBG2`.
+- North America endpoint default: `https://sellingpartnerapi-na.amazon.com`.
+- Catalog Items API lookup: ISBN → ASIN.
+- Sales-rank extraction when available.
+- Product Pricing API used-offer lookup.
+- Used-offer count and current price range.
+- Product Fees API estimate at the median Amazon resale price.
+- Merchant-fulfilled fee assumption for the MVP.
+- Amazon profit/ROI is used only when Amazon returns a fee estimate.
+- Amazon and eBay adapters can fail or be unconfigured independently.
 
-### Profit / decision engine
-- Purchase price input in CAD.
-- Initial shipping assumption: $12 CAD.
-- Approximate eBay book fee model: 15.3% plus per-order fee.
-- Net-profit calculation.
-- ROI calculation.
-- BUY / MAYBE / PASS recommendation.
-- Initial BUY threshold: profit ≥ $15 CAD, ROI ≥ 75%, and confidence above LOW.
-- Central constants make thresholds/assumptions easy to change later.
+### Marketplace comparison
+- New valuation endpoint aggregates Amazon and eBay.
+- UI displays separate marketplace cards.
+- Shows the marketplace with the highest current estimated profit when fee data is sufficient.
+- Amazon card can show ASIN, sales rank, rank category, used offers, price range, fees, and profit.
+- Missing credentials are source-specific setup notices rather than breaking the entire flow.
 
-### QA
-- Vitest is installed.
-- Production builds run unit tests before Next.js build.
-- Unit tests cover:
-  - ISBN validation/normalization/conversion.
-  - Outlier filtering and active-listing summarization.
-  - Fee calculation.
-  - Profit and ROI.
-  - BUY/MAYBE/PASS confidence behavior.
-- Test-gated Vercel deployment reached READY successfully.
-- TypeScript and Next.js production compilation pass.
+### Security
+- Real SP-API credentials are server-only environment variables.
+- `.env.example` contains names/placeholders only.
+- No customer PII or restricted SP-API roles are required.
+- Detailed setup guide: `40-Research/amazon-sp-api-setup.md`.
 
-### PWA
-- Web app manifest added.
-- Look4Book app icon added.
-- Standalone/home-screen metadata added.
-- Pink theme/background configured.
+## Credentials still required
 
-## Deployment
+### Amazon
+- `AMAZON_SPAPI_LWA_CLIENT_ID`
+- `AMAZON_SPAPI_LWA_CLIENT_SECRET`
+- `AMAZON_SPAPI_REFRESH_TOKEN`
 
-Vercel project: `look4book`  
-Git source: `jenozu/look4book` → `main`  
-Primary alias: `https://look4book-jenozus-projects.vercel.app`
+Defaults:
+- `AMAZON_SPAPI_MARKETPLACE_ID=A2EUQ1WTGCTBG2`
+- `AMAZON_SPAPI_ENDPOINT=https://sellingpartnerapi-na.amazon.com`
 
-Vercel treats `main` as this project's production branch, so pushes to `main` deploy automatically.
-
-## What I still need from the user
-
-### 1. eBay production credentials
-The pricing adapter is built, but live eBay data cannot run until these are configured securely in Vercel:
-
+### eBay
 - `EBAY_CLIENT_ID`
 - `EBAY_CLIENT_SECRET`
-- `EBAY_MARKETPLACE_ID=EBAY_CA` (optional; this is already the code default)
 
-Do **not** commit or paste secrets into GitHub/chat. Add them directly in Vercel project environment settings.
+## Physical verification still required
 
-### 2. Physical iPhone/book verification
-Still unverified:
-- Camera permission flow on the user's iPhone.
-- Successful physical ISBN barcode scan.
-- Metadata accuracy across several real books.
-- Full scan → confirm → price → recommendation flow on-device after eBay credentials are connected.
+- iPhone camera permission.
+- Physical ISBN scan.
+- Several real-book metadata checks.
+- Live Amazon result after SP-API setup.
+- Live eBay result after eBay credentials are configured.
+- Compare Look4Book against the Amazon Seller app on real books.
 
-## Known MVP limitation
+## Known limitations
 
-The standard eBay Browse integration currently uses **active asking prices**, not completed/sold prices. The UI communicates this and caps confidence at MEDIUM. A future data source for sold-history / sell-through would materially improve valuation quality.
+- Amazon sales rank is a demand signal, not exact monthly-sales count.
+- Amazon pricing is current offer data, not completed-sale history.
+- eBay pricing is current listing data, not completed-sale history.
+- Shipping remains a flat configurable CAD assumption for the MVP.
+- Amazon fee estimate currently assumes merchant fulfillment.
 
-## Next recommended action
+## Next action
 
-Configure the eBay credentials in Vercel, redeploy, then test one real book end-to-end on the user's iPhone.
+Complete `40-Research/amazon-sp-api-setup.md`, add Amazon credentials to Vercel, then run one real-book test.
 
 ## Handoff order
 
@@ -102,4 +92,5 @@ Configure the eBay credentials in Vercel, redeploy, then test one real book end-
 2. `master_plan.md`
 3. This file
 4. `10-Strategy/PRD.md`
-5. Relevant architecture/decision notes
+5. `40-Research/amazon-sp-api-setup.md`
+6. Relevant architecture/decision notes

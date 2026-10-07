@@ -40,11 +40,21 @@ export function removePriceOutliers(prices: number[]): number[] {
   return filtered.length >= 3 ? filtered : sorted;
 }
 
-export function summarizeActiveListings(
-  prices: number[],
-  currency: string,
-  listingCount: number,
-): MarketplaceResult | null {
+export function summarizeMarketplacePrices({
+  marketplace,
+  basis,
+  prices,
+  currency,
+  listingCount,
+  note,
+}: {
+  marketplace: MarketplaceResult["marketplace"];
+  basis: MarketplaceResult["basis"];
+  prices: number[];
+  currency: string;
+  listingCount: number;
+  note: string;
+}): MarketplaceResult | null {
   const filtered = removePriceOutliers(prices);
   if (filtered.length === 0) return null;
 
@@ -52,8 +62,8 @@ export function summarizeActiveListings(
   if (filtered.length >= 8) confidence = "medium";
 
   return {
-    marketplace: "ebay",
-    basis: "active_listings",
+    marketplace,
+    basis,
     currency,
     listingCount,
     sampleSize: filtered.length,
@@ -61,7 +71,22 @@ export function summarizeActiveListings(
     medianPrice: roundMoney(quantile(filtered, 0.5)),
     highPrice: roundMoney(quantile(filtered, 0.75)),
     confidence,
+    note,
+  };
+}
+
+export function summarizeActiveListings(
+  prices: number[],
+  currency: string,
+  listingCount: number,
+): MarketplaceResult | null {
+  return summarizeMarketplacePrices({
+    marketplace: "ebay",
+    basis: "active_listings",
+    prices,
+    currency,
+    listingCount,
     note:
       "Estimate is based on active asking prices, not completed sales, so confidence is capped at medium.",
-  };
+  });
 }
