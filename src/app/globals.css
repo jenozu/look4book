@@ -360,3 +360,154 @@ h1 {
     width: 100%;
   }
 }
+
+
+.lookup-card {
+  padding: 22px;
+}
+
+.lookup-card h2 {
+  margin: 16px 0 2px;
+  font-size: 1.5rem;
+  letter-spacing: -0.035em;
+}
+
+.lookup-loader {
+  width: 42px;
+  height: 42px;
+  margin: 24px auto 4px;
+  border: 4px solid var(--neutral-divider);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: lookup-spin 800ms linear infinite;
+}
+
+@keyframes lookup-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.isbn-display {
+  margin: 14px 0 20px;
+  padding: 10px 12px;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--neutral-light);
+  font-weight: 850;
+  word-break: break-word;
+}
+
+.book-card {
+  display: grid;
+  grid-template-columns: minmax(105px, 34%) 1fr;
+  gap: 16px;
+  padding: 16px;
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.book-cover-wrap {
+  align-self: start;
+}
+
+.book-cover,
+.book-cover-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  background: var(--ice-blue);
+  object-fit: cover;
+}
+
+.book-cover-placeholder {
+  display: grid;
+  place-items: center;
+  font-size: 1.1rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.book-info h2 {
+  margin: 11px 0 5px;
+  font-size: clamp(1.35rem, 6vw, 2rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.book-author {
+  margin: 0 0 15px;
+  font-weight: 750;
+}
+
+.book-meta {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+}
+
+.book-meta div {
+  padding-top: 8px;
+  border-top: 2px solid var(--neutral-divider);
+}
+
+.book-meta dt {
+  margin-bottom: 2px;
+  font-size: 0.67rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.book-meta dd {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.confirmation-actions {
+  display: grid;
+  gap: 11px;
+  margin-top: 18px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.confirmed-card {
+  margin-top: 18px;
+  padding: 18px;
+  border: 2px solid var(--ink);
+  border-radius: 18px;
+  background: var(--cta-cyan);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+
+.confirmed-card h2 {
+  margin: 14px 0 5px;
+  font-size: 1.45rem;
+  letter-spacing: -0.035em;
+}
+
+.confirmed-card p {
+  margin: 0 0 18px;
+  font-weight: 650;
+}
+
+.data-note {
+  margin: 18px 4px 0;
+  text-align: center;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+@media (max-width: 420px) {
+  .book-card {
+    grid-template-columns: 105px 1fr;
+  }
+}
