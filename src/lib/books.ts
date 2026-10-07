@@ -36,16 +36,18 @@ export async function getBookByISBN(isbn: string): Promise<BookMetadata | null> 
 
   if (!result?.title) return null;
 
+  const authors =
+    result.authors?.flatMap((author) => (author.name ? [author.name] : [])) ?? [];
+  const publishers =
+    result.publishers?.flatMap((publisher) =>
+      publisher.name ? [publisher.name] : [],
+    ) ?? [];
+
   return {
     isbn,
     title: result.title,
-    authors:
-      result.authors?.map((author) => author.name).filter(Boolean) as string[] ??
-      [],
-    publishers:
-      result.publishers
-        ?.map((publisher) => publisher.name)
-        .filter(Boolean) as string[] ?? [],
+    authors,
+    publishers,
     publishDate: result.publish_date,
     pageCount: result.number_of_pages,
     coverUrl: result.cover?.large ?? result.cover?.medium ?? result.cover?.small,
