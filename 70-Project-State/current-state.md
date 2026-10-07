@@ -1,43 +1,59 @@
 # Look4Book — Current Project State
 
 **Last updated:** 2026-10-07  
-**Status:** Planning foundation complete; application implementation not started.
+**Status:** Scanner + book-identification flow implemented and building successfully on Vercel.
 
 ## Completed
 
-- Repository exists at `jenozu/look4book`.
-- Lean MVP scope is defined.
-- Master task list exists in `master_plan.md`.
-- 2nd Brain folder structure is initialized.
-- PRD is stored in `10-Strategy/PRD.md`.
-- UI direction is stored in `20-Architecture/UI_STYLE_GUIDE.md`.
-- Look4Book uses the same core palette as eBayBay:
-  - Pink `#FFD8E8`
-  - Cyan `#9BE9FB`
-  - White `#FFFFFF`
-  - Black `#000000`
+- Repository and 2nd Brain foundation are in place.
+- Next.js 16.4 + React 19.3 + TypeScript + Tailwind scaffold is committed.
+- Mobile-first eBayBay-derived pink/cyan/white/black UI is implemented.
+- EAN-13 / ISBN-13 camera scanning is implemented with ZXing.
+- Scanner prefers the rear-facing phone camera.
+- ISBN-10 and ISBN-13 manual entry fallback is implemented.
+- ISBN check-digit validation and normalization are implemented.
+- Camera-denied, invalid-ISBN, stop/retry, and scan-again states are implemented.
+- `getBookByISBN(isbn)` is implemented behind a provider boundary.
+- Open Library is connected as the first no-key metadata provider.
+- Book lookup returns title, authors, ISBN, publisher, publication date, page count, and cover when available.
+- Book confirmation UI includes **Correct Book** and **Scan Again**.
+- Unknown/missing metadata returns a readable recovery state.
+- Vercel project `look4book` is linked to `jenozu/look4book`.
+- Production builds compile successfully and pass Next.js TypeScript validation.
 
-## Verified product direction
+## Current deployment
 
-Primary flow:
+Vercel project: `look4book`  
+Git source: `jenozu/look4book` → `main`  
+Primary Vercel alias: `look4book-jenozus-projects.vercel.app`
 
-`Scan ISBN → identify book → enter thrift price → estimate resale → BUY / MAYBE / PASS`
+When the Git project was linked, Vercel treated `main` as the production branch, so the initial deployment went to the project's production target rather than remaining preview-only.
 
-The MVP is single-user, mobile-first, and intentionally does not include inventory management, automated listings, accounts, subscriptions, or AI cover recognition.
+## Still needs physical-device verification
 
-## Next task
+These cannot be truthfully marked complete without using a real phone/book:
 
-Start **Phase 1 — ISBN Scanner**:
+1. Camera permission flow on the user's iPhone.
+2. Successful scan of a physical ISBN-13 barcode.
+3. Book identification across several common/uncommon physical books.
 
-1. Scaffold Next.js + TypeScript.
-2. Add Tailwind.
-3. Build the mobile scanner view.
-4. Integrate EAN-13 / ISBN-13 camera scanning.
-5. Add manual ISBN fallback.
+## Next development phase
 
-## Blockers
+**Phase 3 — Resale Pricing**
 
-None currently documented.
+The recommended first marketplace is eBay. The app can be structured now, but live eBay marketplace lookup will require eBay application credentials configured as Vercel environment variables. Credentials must not be committed to Git.
+
+Planned next work:
+
+1. Define `MarketplaceResult`.
+2. Build the eBay marketplace adapter.
+3. Add outlier-resistant resale range calculation.
+4. Add comparable count + confidence.
+5. Connect the confirmed-book screen to resale pricing.
+
+## Blocker for live marketplace data
+
+Live eBay API authentication requires project credentials (client ID / client secret or the appropriate eBay application-token flow). No secrets are currently stored in this repository.
 
 ## Handoff rule
 

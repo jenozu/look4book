@@ -28,14 +28,14 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 
 ## Phase 1 — ISBN Scanner
 
-- [ ] Scaffold a Next.js + TypeScript application.
-- [ ] Add Tailwind CSS.
-- [ ] Build the mobile-first scanner screen.
-- [ ] Request phone-camera permission cleanly.
-- [ ] Integrate browser barcode scanning for EAN-13 / ISBN-13.
-- [ ] Validate and normalize scanned ISBN values.
-- [ ] Add manual ISBN entry as a fallback.
-- [ ] Add clear scan-success, scan-failure, and retry states.
+- [x] Scaffold a Next.js + TypeScript application.
+- [x] Add Tailwind CSS.
+- [x] Build the mobile-first scanner screen.
+- [x] Request phone-camera permission cleanly.
+- [x] Integrate browser barcode scanning for EAN-13 / ISBN-13.
+- [x] Validate and normalize scanned ISBN values.
+- [x] Add manual ISBN entry as a fallback.
+- [x] Add clear scan-success, scan-failure, and retry states.
 - [ ] Test barcode scanning on a real phone.
 
 **Phase exit:** A physical book barcode reliably produces a normalized ISBN.
@@ -44,13 +44,13 @@ The MVP is complete when I can open Look4Book on my phone, scan a book's ISBN ba
 
 ## Phase 2 — Book Identification
 
-- [ ] Create a `getBookByISBN(isbn)` service boundary.
-- [ ] Connect one book-metadata provider.
-- [ ] Return title, author, and ISBN.
-- [ ] Display cover, publisher, edition, and publication date when available.
-- [ ] Build the book-confirmation screen.
-- [ ] Add **Correct Book** and **Scan Again** actions.
-- [ ] Handle unknown or incomplete ISBN results gracefully.
+- [x] Create a `getBookByISBN(isbn)` service boundary.
+- [x] Connect one book-metadata provider (Open Library).
+- [x] Return title, author, and ISBN.
+- [x] Display cover, publisher, edition-related metadata, and publication date when available.
+- [x] Build the book-confirmation screen.
+- [x] Add **Correct Book** and **Scan Again** actions.
+- [x] Handle unknown or incomplete ISBN results gracefully.
 - [ ] Test several common and uncommon books.
 
 **Phase exit:** A scanned ISBN shows the correct book and lets me confirm it.
@@ -102,15 +102,15 @@ These are starting values and must remain configurable.
 
 ## Phase 5 — Mobile UI & PWA
 
-- [ ] Implement the approved Look4Book theme tokens globally.
-- [ ] Use bubblegum pink as the app canvas.
-- [ ] Use cyan for primary actions.
-- [ ] Use white surfaces with strong black borders and offset shadows.
+- [x] Implement the approved Look4Book theme tokens globally.
+- [x] Use bubblegum pink as the app canvas.
+- [x] Use cyan for primary actions.
+- [x] Use white surfaces with strong black borders and offset shadows.
 - [ ] Build the four core views: Scanner, Book Confirmation, Purchase Price, Result.
 - [ ] Keep primary mobile touch targets at least ~44px.
 - [ ] Make **Scan Another** a prominent result-screen action.
-- [ ] Add loading states while metadata and prices are fetched.
-- [ ] Add readable error states without breaking the scan flow.
+- [x] Add loading state for metadata lookup; pricing loading state remains Phase 3.
+- [x] Add readable scanner and metadata error states without breaking the flow.
 - [ ] Add PWA manifest and installability.
 - [ ] Test the full flow at phone width.
 
@@ -128,8 +128,8 @@ These are starting values and must remain configurable.
 - [ ] Test missing marketplace data.
 - [ ] Test camera denial and manual-entry fallback.
 - [ ] Test slow or failed third-party requests.
-- [ ] Run production build and typecheck.
-- [ ] Deploy to Vercel.
+- [x] Run production build and typecheck on Vercel.
+- [x] Deploy to Vercel and link GitHub main branch.
 - [ ] Test the deployed app on a real phone using real thrift-store books.
 - [ ] Update `70-Project-State/current-state.md` with the verified MVP state.
 
