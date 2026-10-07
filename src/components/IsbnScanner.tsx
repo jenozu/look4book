@@ -137,6 +137,12 @@ export default function IsbnScanner() {
     acceptIsbn(manualIsbn);
   }
 
+  function handleStop() {
+    stopScanner();
+    setStatus("idle");
+    setMessage("Camera stopped. Tap Scan Book when you are ready.");
+  }
+
   function reset() {
     stopScanner();
     setIsbn("");
@@ -213,7 +219,7 @@ export default function IsbnScanner() {
           <button
             className="button button-primary"
             type="button"
-            onClick={cameraActive ? stopScanner : startScanner}
+            onClick={cameraActive ? handleStop : startScanner}
             disabled={status === "starting"}
           >
             {status === "starting"
