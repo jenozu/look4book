@@ -84,9 +84,17 @@ async function getApplicationToken(): Promise<string> {
   return cachedToken.value;
 }
 
-function selectDominantCurrency(
+function selectPricesForMarketplace(
   items: NonNullable<EbaySearchResponse["itemSummaries"]>,
+  marketplaceId: string,
 ): { currency: string; prices: number[] } | null {
+  const expectedCurrency =
+    marketplaceId === "EBAY_CA"
+      ? "CAD"
+      : marketplaceId === "EBAY_US"
+        ? "USD"
+        : undefined;
+
   const byCurrency = new Map<string, number[]>();
 
   for (const item of items) {
@@ -100,6 +108,13 @@ function selectDominantCurrency(
     const prices = byCurrency.get(currency) ?? [];
     prices.push(numericPrice);
     byCurrency.set(currency, prices);
+  }
+
+  if (expectedCurrency) {
+    const prices = byCurrency.get(expectedCurrency) ?? [];
+    return prices.length > 0
+      ? { currency: expectedCurrency, prices }
+      : null;
   }
 
   const dominant = [...byCurrency.entries()].sort(
@@ -136,13 +151,13 @@ export async function searchEbayByIsbn(
 
   const payload = (await response.json()) as EbaySearchResponse;
   const items = payload.itemSummaries ?? [];
-  const dominant = selectDominantCurrency(items);
+  const selected = selectPricesForMarketplace(items, marketplaceId);
 
-  if (!dominant) return null;
+  if (!selected) return null;
 
   return summarizeActiveListings(
-    dominant.prices,
-    dominant.currency,
+    selected.prices,
+    selected.currency,
     payload.total ?? items.length,
   );
 }
