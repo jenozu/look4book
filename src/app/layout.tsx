@@ -4,6 +4,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Look4Book",
   description: "Scan thrift-store books and decide whether they are worth reselling.",
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Look4Book",
+    statusBarStyle: "default",
+  },
 };
 
 export const viewport: Viewport = {
